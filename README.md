@@ -66,6 +66,22 @@ The `terraform-sage` application provides to developers two ways to organize the
     Cons:  
         - During evolving the project `main.tf` file can contain a lot of dependant resources
 
+Development
+-----------
+To start developing you will need:
+- [Docker](https://docs.docker.com/install/)
+- [Docker-compose](https://docs.docker.com/compose/install/)
+
+Before attaching to node, you will need to build the local dev image and start it in detached mode. Run the following command from the project root folder:
+```
+docker-compose -f docker-compose.dev.yml up -d
+```
+Then connect to the `app` node with bash via `exec` command:
+```
+docker-compose -f docker-compose.dev.yml exec app bash
+```
+And now, you're ready to go! Use the `cargo` tool command inside of container as you would like.
+
 License
 -------
 The terraform-sage project is published under BSD license. For more details read the [LICENSE](https://github.com/Relrin/terraform-sage/blob/master/LICENSE) file.
