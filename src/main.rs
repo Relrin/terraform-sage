@@ -1,3 +1,17 @@
+mod cli;
+mod client;
+mod error;
+mod terminal;
+mod utils;
+
+use structopt::StructOpt;
+
+use crate::cli::Command;
+use crate::client::Client;
+
+
 fn main() {
-    println!("Hello, world!");
+    let command = Command::from_args();
+    let client = Client::new();
+    client.run(&command);
 }
