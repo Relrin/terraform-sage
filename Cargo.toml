@@ -1,0 +1,8 @@
+[package]
+name = "terraform-sage"
+version = "0.1.0"
+authors = ["Valeryi Savich <relrin78@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+structopt = "0.2"
