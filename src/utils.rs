@@ -47,7 +47,7 @@ pub fn get_configs(path: &String) -> Result<HashMap<String, String>, SageError> 
 
 #[cfg(test)]
 mod tests {
-    use crate::utils::get_files_list;
+    use crate::utils::{get_files_list, get_configs};
 
     #[test]
     fn test_get_files_list_returns_vector_of_entries() {
@@ -60,9 +60,40 @@ mod tests {
     }
 
     #[test]
-    fn test_get_files_list_returns_error_for_non_existing_directory() {
+    fn test_get_files_list_returns_error_for_invalid_path() {
         let path = String::from("./NOT_EXISTING_DIR/");
         let result = get_files_list(&path);
+
+        assert_eq!(result.is_err(), true);
+    }
+
+    #[test]
+    fn test_get_configs_returns_all_available_configurations() {
+        let path = String::from("./examples/approach_two");
+        let result = get_configs(&path);
+
+        assert_eq!(result.is_ok(), true);
+        let configs = result.unwrap();
+        assert_eq!(configs.len(), 3);
+        assert_eq!(configs.contains_key("dev"), true);
+        assert_eq!(configs.contains_key("staging"), true);
+        assert_eq!(configs.contains_key("production"), true);
+    }
+
+    #[test]
+    fn test_get_configs_returns_empty_hashmap() {
+        let path = String::from(".");
+        let result = get_configs(&path);
+
+        assert_eq!(result.is_ok(), true);
+        let configs = result.unwrap();
+        assert_eq!(configs.len(), 0);
+    }
+
+    #[test]
+    fn test_get_configs_returns_error_for_invalid_path() {
+        let path = String::from("./NOT_EXISTING_DIR/");
+        let result = get_configs(&path);
 
         assert_eq!(result.is_err(), true);
     }
