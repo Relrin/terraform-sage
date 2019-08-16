@@ -35,6 +35,12 @@ pub fn get_configs(path: &String) -> Result<HashMap<String, String>, SageError> 
                 Err(_) => vec![]
             }
         })
+        .filter(|f| {
+            match f.metadata() {
+                Ok(metadata) => metadata.is_dir(),
+                Err(_) => false
+            }
+        })
         .map(|dir| (
             dir.file_name().to_string_lossy().into_owned(), // directory name
             dir.path().to_string_lossy().into_owned(),      // path
@@ -42,6 +48,17 @@ pub fn get_configs(path: &String) -> Result<HashMap<String, String>, SageError> 
         .collect();
 
     Ok(configs)
+}
+
+
+pub fn is_correct_config(name: &String, configs: HashMap<String, String>) -> Result<(), SageError> {
+    match configs.contains_key(name) {
+        true => Ok(()),
+        false => {
+            let message = String::from(format!("Configuration with {} name was not found.", name));
+            Err(SageError::InvalidConfig(message))
+        }
+    }
 }
 
 
