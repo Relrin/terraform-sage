@@ -1,6 +1,7 @@
 mod cli;
 mod client;
 mod error;
+mod template;
 mod terminal;
 mod utils;
 
