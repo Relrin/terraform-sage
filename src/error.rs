@@ -1,8 +1,7 @@
-use std::io::{self};
+use std::io;
 
 use handlebars::TemplateRenderError;
 use quick_error::quick_error;
-
 
 quick_error! {
     #[derive(Debug)]

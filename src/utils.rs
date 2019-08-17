@@ -5,51 +5,46 @@ use quick_error::ResultExt;
 
 use crate::error::SageError;
 
-
 pub const CONFIG_DIRECTORY_NAME: &'static str = "configs";
 
-
 pub fn get_files_list(path: &String) -> Result<Vec<DirEntry>, SageError> {
-    let files: Vec<_> = fs::read_dir(path).context(path)?
+    let files: Vec<_> = fs::read_dir(path)
+        .context(path)?
         .filter_map(Result::ok)
         .collect();
 
     Ok(files)
 }
 
-
 pub fn get_configs(path: &String) -> Result<HashMap<String, String>, SageError> {
     let configs = get_files_list(path)?
         .into_iter()
-        .filter(|f| {
-            match f.metadata() {
-                Ok(metadata) => metadata.is_dir(),
-                Err(_) => false
-            }
+        .filter(|f| match f.metadata() {
+            Ok(metadata) => metadata.is_dir(),
+            Err(_) => false,
         })
         .filter(|f| f.file_name() == CONFIG_DIRECTORY_NAME)
         .flat_map(|f| {
             let dir = f.path().to_string_lossy().into_owned();
             match get_files_list(&dir) {
                 Ok(vec) => vec,
-                Err(_) => vec![]
+                Err(_) => vec![],
             }
         })
-        .filter(|f| {
-            match f.metadata() {
-                Ok(metadata) => metadata.is_dir(),
-                Err(_) => false
-            }
+        .filter(|f| match f.metadata() {
+            Ok(metadata) => metadata.is_dir(),
+            Err(_) => false,
         })
-        .map(|dir| (
-            dir.file_name().to_string_lossy().into_owned(), // directory name
-            dir.path().to_string_lossy().into_owned(),      // path
-        ))
+        .map(|dir| {
+            (
+                dir.file_name().to_string_lossy().into_owned(), // directory name
+                dir.path().to_string_lossy().into_owned(),      // path
+            )
+        })
         .collect();
 
     Ok(configs)
 }
-
 
 pub fn is_correct_config(name: &String, configs: HashMap<String, String>) -> Result<(), SageError> {
     match configs.contains_key(name) {
@@ -61,10 +56,9 @@ pub fn is_correct_config(name: &String, configs: HashMap<String, String>) -> Res
     }
 }
 
-
 #[cfg(test)]
 mod tests {
-    use crate::utils::{get_files_list, get_configs};
+    use crate::utils::{get_configs, get_files_list};
 
     #[test]
     fn test_get_files_list_returns_vector_of_entries() {

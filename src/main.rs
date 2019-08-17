@@ -10,7 +10,6 @@ use structopt::StructOpt;
 use crate::cli::Command;
 use crate::client::Client;
 
-
 fn main() {
     let command = Command::from_args();
     let client = Client::new();
