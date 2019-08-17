@@ -3,6 +3,7 @@ mod client;
 mod error;
 mod template;
 mod terminal;
+mod terraform;
 mod utils;
 
 use structopt::StructOpt;

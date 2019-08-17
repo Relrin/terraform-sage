@@ -10,12 +10,16 @@ use crate::terminal::print_info;
 
 pub const CONFIG_TEMPLATE_PARAM: &'static str = "CONFIG_NAME";
 
+pub fn generate_file_name(target: &String) -> String {
+    format!("main-{}.tf", target).to_owned()
+}
+
 pub fn generate_from_template(
     handlebars: &Handlebars,
     config: &String,
     target: &String,
     out: &String,
-) -> Result<fs::File, SageError> {
+) -> Result<String, SageError> {
     let template = fs::read_to_string(target).context(target)?;
 
     print_info("Generating Terraform file...");
@@ -27,7 +31,7 @@ pub fn generate_from_template(
     let mut file = fs::File::create(out).context(out)?;
     file.write_all(module.as_bytes()).context(out)?;
     print_info(&format!("New Terraform file was created by path: {}", out));
-    Ok(file)
+    Ok(out.to_string())
 }
 
 #[cfg(test)]
