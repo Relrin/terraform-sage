@@ -58,7 +58,7 @@ pub fn is_correct_config(name: &String, configs: HashMap<String, String>) -> Res
 
 #[cfg(test)]
 mod tests {
-    use crate::utils::{get_configs, get_files_list};
+    use crate::utils::{get_configs, get_files_list, is_correct_config};
 
     #[test]
     fn test_get_files_list_returns_vector_of_entries() {
@@ -105,6 +105,24 @@ mod tests {
     fn test_get_configs_returns_error_for_invalid_path() {
         let path = String::from("./NOT_EXISTING_DIR/");
         let result = get_configs(&path);
+
+        assert_eq!(result.is_err(), true);
+    }
+
+    #[test]
+    fn test_is_correct_config_return_empty_result() {
+        let path = String::from("./examples/templates");
+        let configs = get_configs(&path).unwrap();
+        let result = is_correct_config(&"dev".to_owned(), configs);
+
+        assert_eq!(result.is_ok(), true);
+    }
+
+    #[test]
+    fn test_is_correct_config_returns_error() {
+        let path = String::from("./examples/templates");
+        let configs = get_configs(&path).unwrap();
+        let result = is_correct_config(&"INVALID".to_owned(), configs);
 
         assert_eq!(result.is_err(), true);
     }
