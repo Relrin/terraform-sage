@@ -7,6 +7,7 @@ use crate::error::SageError;
 
 pub const CONFIG_DIRECTORY_NAME: &'static str = "configs";
 
+// Returns list of files for directory specified in `path` parameter.
 pub fn get_files_list(path: &String) -> Result<Vec<DirEntry>, SageError> {
     let files: Vec<_> = fs::read_dir(path)
         .context(path)?
@@ -16,6 +17,9 @@ pub fn get_files_list(path: &String) -> Result<Vec<DirEntry>, SageError> {
     Ok(files)
 }
 
+// Returns dictionary, where the key is configuration name and value is the
+// full path to this directory. Search is happening by directory specified
+// in `path` parameter.
 pub fn get_configs(path: &String) -> Result<HashMap<String, String>, SageError> {
     let configs = get_files_list(path)?
         .into_iter()
@@ -46,6 +50,7 @@ pub fn get_configs(path: &String) -> Result<HashMap<String, String>, SageError> 
     Ok(configs)
 }
 
+// Checks that the given name is represented in the configurations list.
 pub fn is_correct_config(name: &String, configs: HashMap<String, String>) -> Result<(), SageError> {
     match configs.contains_key(name) {
         true => Ok(()),
