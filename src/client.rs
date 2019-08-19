@@ -75,6 +75,8 @@ impl SageClient {
         cleanup: bool,
         extra: &Vec<String>,
     ) -> Result<(), SageError> {
+        let configs = get_configs(directory)?;
+        is_correct_config(config, configs)?;
         let out_filename = Some(out.clone().unwrap_or(String::from("main.tf")));
         let main_filepath = self.get_main_tf(directory, config, target, template, &out_filename)?;
         let terraform_args = get_terraform_init_args(directory, extra);
