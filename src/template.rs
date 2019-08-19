@@ -10,10 +10,14 @@ use crate::terminal::print_info;
 
 pub const CONFIG_TEMPLATE_PARAM: &'static str = "CONFIG_NAME";
 
+// Generates file name for Terraform main module.
 pub fn generate_file_name(target: &String) -> String {
     format!("main-{}.tf", target).to_owned()
 }
 
+// Generates new Terraform module from the file with name specified
+// in `target` parameter and save the rendered content in file with
+// the name specified in `out` parameter.
 pub fn generate_from_template(
     handlebars: &Handlebars,
     config: &String,
