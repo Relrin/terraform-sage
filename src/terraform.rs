@@ -7,6 +7,7 @@ use quick_error::ResultExt;
 use crate::error::SageError;
 use crate::terminal::{print_info, print_warning};
 
+// Deletes the file with the given path specified in `filepath` parameter.
 pub fn delete_terraform_file(filepath: &String) -> Result<(), SageError> {
     let delete_message = format!("Deleting {} file after execution...", filepath);
     print_warning(&delete_message);
@@ -14,6 +15,7 @@ pub fn delete_terraform_file(filepath: &String) -> Result<(), SageError> {
     Ok(())
 }
 
+// Extracts terraform arguments passed from the terminal.
 pub fn extract_terraform_arguments(extra: &Vec<String>) -> Vec<String> {
     match extra.len() {
         count if count > 1 => extra[1..].to_vec(),
@@ -21,12 +23,16 @@ pub fn extract_terraform_arguments(extra: &Vec<String>) -> Vec<String> {
     }
 }
 
+// Prepare list of arguments, required for Terraform's init command.
 pub fn get_terraform_init_args(directory: &String, extra: &Vec<String>) -> Vec<String> {
     let mut terraform_args = extract_terraform_arguments(extra);
     terraform_args.push(directory.to_string());
     terraform_args
 }
 
+// Invoke Terraform's command with the given `command` name and `args` arguments.
+// The output of this command is printing in user's terminal. In the case of any errors
+// also prints captured errors.
 pub fn terraform_call_without_input(command: &str, args: &Vec<String>) -> Result<(), SageError> {
     print_info(&format!(
         "Executing command: `terraform init {}`",
