@@ -11,17 +11,19 @@ use crate::utils::{get_configs, is_correct_config};
 
 use handlebars::Handlebars;
 
-pub struct Client {
+pub struct SageClient {
     handlebars: Handlebars,
 }
 
-impl Client {
-    pub fn new() -> Client {
-        Client {
+impl SageClient {
+    // Initialize a new instance of Sage client.
+    pub fn new() -> SageClient {
+        SageClient {
             handlebars: Handlebars::new(),
         }
     }
 
+    // An entry point for Terraform-Sage client.
     pub fn run(&self, command: &Command) {
         let result = match command {
             Command::Init {
@@ -63,7 +65,6 @@ impl Client {
     // For deleting the template-based files with the name specified in `out`
     // option and saved by `directory` path, just specify the --cleanup option
     // before executing init command.
-    //
     fn init_terraform(
         &self,
         config: &String,
@@ -85,6 +86,15 @@ impl Client {
         Ok(())
     }
 
+    // Returns a path to the used Terraform main.tf module.
+    //
+    // If `target` option contains path to *.tf module, then it will be
+    // returned to the caller.
+    //
+    // Otherwise, this method will use the specified name for output file in
+    // `out` parameter or generate a new file name, then extract the base
+    // template by path specified in `template` parameter, call a template
+    // renderer and save it by directory, specified in `directory` parameter.
     fn get_main_tf(
         &self,
         directory: &String,
@@ -103,6 +113,7 @@ impl Client {
         }
     }
 
+    // Prints all available configurations, stored by path in `directory` parameter.
     fn show_configurations(&self, directory: &String) -> Result<(), SageError> {
         let configs = get_configs(directory)?;
 
@@ -120,6 +131,12 @@ impl Client {
         Ok(())
     }
 
+    // Generates a new Terraform main module.
+    //
+    // It used the directory, specified in `directory` parameter as the main
+    // working directory, generates file pathes to target/out files, extracts
+    // the template from the file with `target` name and put the rendered text
+    // in file with `out` name.
     fn generate_main_tf(
         &self,
         directory: &String,

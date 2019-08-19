@@ -9,10 +9,10 @@ mod utils;
 use structopt::StructOpt;
 
 use crate::cli::Command;
-use crate::client::Client;
+use crate::client::SageClient;
 
 fn main() {
     let command = Command::from_args();
-    let client = Client::new();
+    let client = SageClient::new();
     client.run(&command);
 }
