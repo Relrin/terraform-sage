@@ -47,7 +47,7 @@ mod tests {
     fn test_generate_from_template() {
         let handlebars = Handlebars::new();
         let config = String::from("dev");
-        let used_directory = Path::new("./examples/templates");
+        let used_directory = Path::new("./examples/approach_two");
         let path_to_target = used_directory
             .join("main.tpl")
             .to_string_lossy()

@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn test_is_correct_config_return_empty_result() {
-        let path = String::from("./examples/templates");
+        let path = String::from("./examples/approach_two");
         let configs = get_configs(&path).unwrap();
         let result = is_correct_config(&"dev".to_owned(), configs);
 
@@ -120,7 +120,7 @@ mod tests {
 
     #[test]
     fn test_is_correct_config_returns_error() {
-        let path = String::from("./examples/templates");
+        let path = String::from("./examples/approach_two");
         let configs = get_configs(&path).unwrap();
         let result = is_correct_config(&"INVALID".to_owned(), configs);
 
