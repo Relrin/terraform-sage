@@ -50,7 +50,53 @@ pub enum Command {
         #[structopt(hidden = true, help = "Extra options for Terraform init command")]
         extra: Vec<String>,
     },
-    // Plan
+    /// Generate an execution plan for Terraform
+    #[structopt(
+        name = "plan",
+        raw(setting = "structopt::clap::AppSettings::TrailingVarArg")
+    )]
+    Plan {
+        #[structopt(required = true, help = "Configuration name")]
+        config: String,
+
+        #[structopt(
+            short = "d",
+            long = "dir",
+            default_value = ".",
+            help = "Path to directory with Terraform files"
+        )]
+        directory: String,
+
+        #[structopt(
+            short = "t",
+            long = "target",
+            help = "Path to the main Terraform module (*.tf)"
+        )]
+        target: Option<String>,
+
+        #[structopt(
+            long = "template",
+            default_value = "main.tpl",
+            help = "File name of the used template module (*.tpl)"
+        )]
+        template: String,
+
+        #[structopt(
+            short = "o",
+            long = "out",
+            help = "File name of the generated Terraform module (*.tf)"
+        )]
+        out: Option<String>,
+
+        #[structopt(
+            long = "--cleanup",
+            help = "Delete main.tf module after initialization."
+        )]
+        cleanup: bool,
+
+        #[structopt(hidden = true, help = "Extra options for Terraform init command")]
+        extra: Vec<String>,
+    },
     // Apply
     // Destroy
     // Output

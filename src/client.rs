@@ -4,15 +4,14 @@ use crate::cli::Command;
 use crate::error::SageError;
 use crate::template::{generate_file_name, generate_from_template};
 use crate::terminal::{print_command_done, print_error, print_info, print_warning};
-use crate::terraform::{
-    delete_terraform_file, get_terraform_init_args, terraform_call_without_input,
-};
+use crate::terraform::TerraformClient;
 use crate::utils::{get_configs, is_correct_config};
 
 use handlebars::Handlebars;
 
 pub struct SageClient {
     handlebars: Handlebars,
+    terraform: TerraformClient,
 }
 
 impl SageClient {
@@ -20,6 +19,7 @@ impl SageClient {
     pub fn new() -> SageClient {
         SageClient {
             handlebars: Handlebars::new(),
+            terraform: TerraformClient::new(),
         }
     }
 
@@ -35,6 +35,15 @@ impl SageClient {
                 cleanup,
                 extra,
             } => self.init_terraform(config, directory, target, template, out, *cleanup, extra),
+            Command::Plan {
+                config,
+                directory,
+                target,
+                template,
+                out,
+                cleanup,
+                extra,
+            } => self.generate_plan_execution(config, directory, target, template, out, *cleanup, extra),
             Command::List { directory } => self.show_configurations(directory),
             Command::Generate {
                 directory,
@@ -79,11 +88,48 @@ impl SageClient {
         is_correct_config(config, configs)?;
         let out_filename = Some(out.clone().unwrap_or(String::from("main.tf")));
         let main_filepath = self.get_main_tf(directory, config, target, template, &out_filename)?;
-        let terraform_args = get_terraform_init_args(directory, extra);
-        terraform_call_without_input("init", &terraform_args)?;
+        let terraform_args = self.terraform.get_init_args(directory, extra);
+        self.terraform.call_without_input("init", &terraform_args)?;
 
         if cleanup {
-            delete_terraform_file(&main_filepath)?;
+            self.terraform.delete_main_tf(&main_filepath)?;
+        };
+        Ok(())
+    }
+
+    // Generates an execution plan for Terraform.
+    //
+    // By default tries to generate new main.tf module with the `out` name and
+    // saves it in `directory` path. The template module are looking in `directory`
+    // path with the `template` name.
+    //
+    // If the module already created by someone, you can specify this module
+    // via usage the `target` option. This option must contain path to this file.
+    //
+    // For deleting the template-based files with the name specified in `out`
+    // option and saved by `directory` path, just specify the --cleanup option
+    // before executing init command.
+    fn generate_plan_execution(
+        &self,
+        config: &String,
+        directory: &String,
+        target: &Option<String>,
+        template: &String,
+        out: &Option<String>,
+        cleanup: bool,
+        extra: &Vec<String>,
+    ) -> Result<(), SageError> {
+        let configs = get_configs(directory)?;
+        is_correct_config(config, configs.clone())?;
+        let configs_copy = configs.clone();
+        let configs_path = configs_copy.get(config).unwrap();
+        let out_filename = Some(out.clone().unwrap_or(String::from("main.tf")));
+        let main_filepath = self.get_main_tf(directory, config, target, template, &out_filename)?;
+        let terraform_args = self.terraform.get_plan_args(configs_path, directory, extra);
+        self.terraform.call_without_input("plan", &terraform_args)?;
+
+        if cleanup {
+            self.terraform.delete_main_tf(&main_filepath)?;
         };
         Ok(())
     }

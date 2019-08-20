@@ -1,11 +1,20 @@
 use std::collections::HashMap;
+use std::ffi::OsStr;
 use std::fs::{self, DirEntry};
+use std::path::Path;
 
 use quick_error::ResultExt;
 
 use crate::error::SageError;
 
 pub const CONFIG_DIRECTORY_NAME: &'static str = "configs";
+
+// Returns file extension.
+pub fn get_extension_from_filename(filename: &str) -> &str {
+    Path::new(filename)
+        .extension()
+        .map_or("", |ext| OsStr::to_str(ext).unwrap_or(""))
+}
 
 // Returns list of files for directory specified in `path` parameter.
 pub fn get_files_list(path: &String) -> Result<Vec<DirEntry>, SageError> {

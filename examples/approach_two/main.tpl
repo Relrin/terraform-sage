@@ -1,6 +1,6 @@
 provider "aws" {
-  profile    = "default"
-  region     = "us-east-1"
+  profile = "default"
+  region  = "us-east-1"
 }
 
 terraform {
@@ -14,6 +14,7 @@ resource "aws_instance" "micro_ec2_instance" {
   instance_type = "t2.micro"
 
   tags = {
+    "Name" = "test-instance"
     "EnvironmentType" = "${var.environment}"
   }
 }
