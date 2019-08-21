@@ -94,8 +94,7 @@ Terraform >= 0.11 (older not tested)
 
 ## Project structure
 
-The `terraform-sage` application recommends to developers two ways to organize their own projects:
-
+The `terraform-sage` application relies on the certain project structure for correct work. Therefore, I recommend to developers two ways to organize their own projects:
 - Approach #1:
 
   ```
@@ -126,7 +125,7 @@ The `terraform-sage` application recommends to developers two ways to organize t
 
   - Dependant resources are split into [Terraform modules](https://www.terraform.io/docs/configuration/modules.html), therefore it is easier to re-use in other projects.
   - Easier to manage projects which have a lot of dependencies.
-  - `main.tf` file is relatively small and contains only a minimum amount of code
+  - `main.tpl` file is relatively small and contains only a minimum amount of code
 
   Cons:
 
@@ -156,7 +155,7 @@ The `terraform-sage` application recommends to developers two ways to organize t
 
   Cons:
 
-  - During the evolution of the project, `main.tf` file can contain a lot of dependant resources
+  - During the evolution of the project, `main.tpl` file can contain a lot of dependant resources
 
 ## Development
 
