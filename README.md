@@ -19,7 +19,7 @@ Terraform >= 0.11 (older not tested)
 
 ## Quick start
 
-1. Install [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) no less than 0.11 version.
+1. Install [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html).
 
 2. Download executable/binary file in according to the used operation system from the [releases page](https://github.com/Relrin/terraform-sage/releases).
 
@@ -66,31 +66,31 @@ Terraform >= 0.11 (older not tested)
     P.S. Also see the [project structure](#project-structure) section for more information about recommended project structure.
 
 6. Create the base template (I recommend to name it as `main.tpl`), that stores main definition of your resources and a backend storage for Terraform state. For making the writing base template easier, I recommend you to start with from `main.tf` module where you will describe everything what you need and then rename it to `main.tpl`. After when all resources / modules are described you will need to specify one of available [backend storages](https://www.terraform.io/docs/backends/types/index.html) for Terraform states, and then append `{{CONFIG_NAME}}` string to the key (which is basically is the file name for Terraform state), like this:
-```
-terraform {
-  backend "s3" {
-    bucket = "state-bucket"
-    key    = "terraform/state-{{CONFIG_NAME}}.tfstate"
-    region = "us-east-1"
-  }
-}
-```
-The `{{CONFIG_NAME}}` string is using as template parameter that will be replaced on the used environment name during the `terraform-sage` command call. This feature will help us in handling different environments without duplicating source code of the `main.tf` file. 
+    ```
+    terraform {
+      backend "s3" {
+        bucket = "state-bucket"
+        key    = "terraform/state-{{CONFIG_NAME}}.tfstate"
+        region = "us-east-1"
+      }
+    }
+    ```
+    The `{{CONFIG_NAME}}` string is using as the template parameter that will be replaced on the used environment name during the `terraform-sage` command call. This feature will help us in handling different environments without duplicating source code of the `main.tf` file. 
 
 7. Then, instead of direct calls to Terraform CLI, you can use the following commands:
-```
-terraform-sage init
-terraform-sage plan
-terraform-sage apply
-terraform-sage destroy
-terraform-sage output
-```
-Also CLI provides two additional commands for generating Terraform's `main.tf` modules and retrieving the list of available environments.
-```
-terraform-sage generate
-terraform-sage list
-```
-For more information about acceptable arguments and options for each command, call any desired command with the `--help` option.
+    ```
+    terraform-sage init
+    terraform-sage plan
+    terraform-sage apply
+    terraform-sage destroy
+    terraform-sage output
+    ```
+    Also CLI provides two additional commands for generating Terraform's `main.tf` modules and retrieving the list of available environments.
+    ```
+    terraform-sage generate
+    terraform-sage list
+    ```
+    For more information about acceptable arguments and options for each command, call any desired command with the `--help` option.
 
 ## Project structure
 
