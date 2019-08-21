@@ -92,6 +92,16 @@ Terraform >= 0.11 (older not tested)
     ```
     For more information about acceptable arguments and options for each command, call any desired command with the `--help` option.
 
+## F.A.Q.
+**Q**: Why this tool / wrapper was written?  
+**A**: Being a quite lazy developer, I tired of writing long Terraform command calls with specifying used `*.tf` / `*.tfvars` modules when you need to create or update something on any existing environment. The mess with modules increases when developers are using different operation systems and "additional" scripts for simplifying their Terraform workflows.
+
+**Q**: How can I pass extra arguments for Terraform command (i.e. `terraform-sage apply`)?  
+**A**: For this case you will need to append `.` in the end, and then specify a list of arguments as you were working with actual Terraform CLI, like this:
+```
+terraform apply dev --dir=examples/approach_two . -var-file=my-variables.tf
+```
+
 ## Project structure
 
 The `terraform-sage` application relies on the certain project structure for correct work. Therefore, I recommend to developers two ways to organize their own projects:
