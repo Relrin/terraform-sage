@@ -2,8 +2,10 @@
 
 Cross-platform tool for easier Terraform deployments
 
-## Futures
+## Features
 
+- Cross-platform wrapper for Terraform written in Rust
+- Template-based approach for working in multiple environments
 - Semi-automated deploys via command-line interface
 
 ## Requirements
@@ -12,7 +14,7 @@ Terraform >= 0.11 (older not tested)
 
 ## Project structure
 
-The `terraform-sage` application provides to developers two ways to organize their own project:
+The `terraform-sage` application recommends to developers two ways to organize their own projects:
 
 - Approach #1:
 
@@ -37,7 +39,7 @@ The `terraform-sage` application provides to developers two ways to organize the
   │     ├ main.tf
   │     ├ output.tf
   │     └ variables.tfvars
-  └ main.tf
+  └ main.tpl
   ```
 
   Pros:
@@ -64,7 +66,7 @@ The `terraform-sage` application provides to developers two ways to organize the
   │  └ production
   │     ├ secrets.tfvars
   │     └ variables.tfvars
-  └ main.tf
+  └ main.tpl
   ```
 
   Pros:
