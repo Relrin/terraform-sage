@@ -44,6 +44,15 @@ impl SageClient {
                 cleanup,
                 extra,
             } => self.generate_plan_execution(config, directory, target, template, out, *cleanup, extra),
+            Command::Apply {
+                config,
+                directory,
+                target,
+                template,
+                out,
+                cleanup,
+                extra,
+            } => self.apply_changes(config, directory, target, template, out, *cleanup, extra),
             Command::List { directory } => self.show_configurations(directory),
             Command::Generate {
                 directory,
@@ -127,6 +136,43 @@ impl SageClient {
         let main_filepath = self.get_main_tf(directory, config, target, template, &out_filename)?;
         let terraform_args = self.terraform.get_plan_args(configs_path, directory, extra);
         self.terraform.call_without_input("plan", &terraform_args)?;
+
+        if cleanup {
+            self.terraform.delete_main_tf(&main_filepath)?;
+        };
+        Ok(())
+    }
+
+    // Creates or updates infrastructure in according to Terraform configuration.
+    //
+    // By default tries to generate new main.tf module with the `out` name and
+    // saves it in `directory` path. The template module are looking in `directory`
+    // path with the `template` name.
+    //
+    // If the module already created by someone, you can specify this module
+    // via usage the `target` option. This option must contain path to this file.
+    //
+    // For deleting the template-based files with the name specified in `out`
+    // option and saved by `directory` path, just specify the --cleanup option
+    // before executing init command.
+    fn apply_changes(
+       &self,
+        config: &String,
+        directory: &String,
+        target: &Option<String>,
+        template: &String,
+        out: &Option<String>,
+        cleanup: bool,
+        extra: &Vec<String>,
+    ) -> Result<(), SageError> {
+        let configs = get_configs(directory)?;
+        is_correct_config(config, configs.clone())?;
+        let configs_copy = configs.clone();
+        let configs_path = configs_copy.get(config).unwrap();
+        let out_filename = Some(out.clone().unwrap_or(String::from("main.tf")));
+        let main_filepath = self.get_main_tf(directory, config, target, template, &out_filename)?;
+        let terraform_args = self.terraform.get_apply_args(configs_path, directory, extra);
+        self.terraform.call_with_input("apply", &terraform_args)?;
 
         if cleanup {
             self.terraform.delete_main_tf(&main_filepath)?;

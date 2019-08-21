@@ -1,5 +1,4 @@
 use std::fs;
-use std::io::Read;
 use std::process::{Command, Stdio};
 
 use quick_error::ResultExt;
@@ -76,6 +75,20 @@ impl TerraformClient {
         terraform_args
     }
 
+    // Prepares list of arguments, required for Terraform's apply command.
+    pub fn get_apply_args(
+        &self,
+        config_directory: &String,
+        directory: &String,
+        extra: &Vec<String>,
+    ) -> Vec<String> {
+        let mut terraform_args = self.extract_arguments(extra);
+        let mut variable_modules = self.get_variable_modules(config_directory, &terraform_args);
+        terraform_args.append(&mut variable_modules);
+        terraform_args.push(directory.to_string());
+        terraform_args
+    }
+
     // Invokes Terraform's command with the given `command` name and `args` arguments.
     // The output of this command is printing in user's terminal. In the case of any errors
     // also prints captured errors.
@@ -84,33 +97,39 @@ impl TerraformClient {
             "Executing command: `terraform {} {}`",
             command, args.join(" ")
         ));
-        let process = Command::new("terraform")
+        print_info(&format!("Terraform output: \n"));
+        let mut process = Command::new("terraform")
             .arg(command)
             .args(args)
-            .stdout(Stdio::piped())
-            .stderr(Stdio::piped())
+            .stdout(Stdio::inherit())
+            .stderr(Stdio::inherit())
             .spawn()
             .context(command)?;
 
-        let copy_error = String::from("copying command output into buffer");
-        let mut stderr_output = String::new();
-        process
-            .stderr
-            .unwrap()
-            .read_to_string(&mut stderr_output)
-            .context(&copy_error)?;
+        process.wait().context("spawn process")?;
+        Ok(())
+    }
 
-        let mut stdin_output = String::new();
-        process
-            .stdout
-            .unwrap()
-            .read_to_string(&mut stdin_output)
-            .context(&copy_error)?;
+    // Invokes Terraform's command with the given `command` name and `args` arguments.
+    // Before execution capture all stdout/stderr output and prints in user's terminal, then
+    // asks for a user's input for the command, execute the command if acceptable and output
+    // the execution result.
+    pub fn call_with_input(&self, command: &str, args: &Vec<String>) -> Result<(), SageError> {
+        print_info(&format!(
+            "Executing command: `terraform {} {}`",
+            command, args.join(" ")
+        ));
+        print_info(&format!("Terraform output: \n"));
+        let mut process = Command::new("terraform")
+            .arg(command)
+            .args(args)
+            .stdin(Stdio::inherit())
+            .stdout(Stdio::inherit())
+            .stderr(Stdio::inherit())
+            .spawn()
+            .context(command)?;
 
-        print_info(&format!("Terraform output: \n{}", stdin_output));
-        if !stderr_output.is_empty() {
-            println!("{}", stderr_output);
-        }
+        process.wait().context("spawn process")?;
         Ok(())
     }
 
