@@ -2,6 +2,12 @@
 
 Cross-platform tool for easier Terraform deployments
 
+ - [Quick start](#quick-start)
+ - [FAQ](#faq)
+ - [Project structure](#project-structure)
+ - [Development](#development)
+ - [License](#license)
+
 ## Features
 
 - Template-based approach for working in multiple environments
