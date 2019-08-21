@@ -54,37 +54,23 @@ impl TerraformClient {
             .collect()
     }
 
+    // Prepares list of arguments, required for Terraform's plan/apply/destroy commands.
+    pub fn get_command_args(
+        &self,
+        config_directory: &String,
+        directory: &String,
+        extra: &Vec<String>,
+    ) -> Vec<String> {
+        let mut terraform_args = self.extract_arguments(extra);
+        let mut variable_modules = self.get_variable_modules(config_directory, &terraform_args);
+        terraform_args.append(&mut variable_modules);
+        terraform_args.push(directory.to_string());
+        terraform_args
+    }
+
     // Prepares list of arguments, required for Terraform's init command.
     pub fn get_init_args(&self, directory: &String, extra: &Vec<String>) -> Vec<String> {
         let mut terraform_args = self.extract_arguments(extra);
-        terraform_args.push(directory.to_string());
-        terraform_args
-    }
-
-    // Prepares list of arguments, required for Terraform's plan command.
-    pub fn get_plan_args(
-        &self,
-        config_directory: &String,
-        directory: &String,
-        extra: &Vec<String>,
-    ) -> Vec<String> {
-        let mut terraform_args = self.extract_arguments(extra);
-        let mut variable_modules = self.get_variable_modules(config_directory, &terraform_args);
-        terraform_args.append(&mut variable_modules);
-        terraform_args.push(directory.to_string());
-        terraform_args
-    }
-
-    // Prepares list of arguments, required for Terraform's apply command.
-    pub fn get_apply_args(
-        &self,
-        config_directory: &String,
-        directory: &String,
-        extra: &Vec<String>,
-    ) -> Vec<String> {
-        let mut terraform_args = self.extract_arguments(extra);
-        let mut variable_modules = self.get_variable_modules(config_directory, &terraform_args);
-        terraform_args.append(&mut variable_modules);
         terraform_args.push(directory.to_string());
         terraform_args
     }

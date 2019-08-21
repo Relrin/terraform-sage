@@ -94,11 +94,11 @@ pub enum Command {
         )]
         cleanup: bool,
 
-        #[structopt(hidden = true, help = "Extra options for Terraform init command")]
+        #[structopt(hidden = true, help = "Extra options for Terraform plan command")]
         extra: Vec<String>,
     },
     /// Create or update infrastructure in according to Terraform configuration
-     #[structopt(
+    #[structopt(
         name = "apply",
         raw(setting = "structopt::clap::AppSettings::TrailingVarArg")
     )]
@@ -141,11 +141,56 @@ pub enum Command {
         )]
         cleanup: bool,
 
-        #[structopt(hidden = true, help = "Extra options for Terraform init command")]
+        #[structopt(hidden = true, help = "Extra options for Terraform apply command")]
         extra: Vec<String>,
     },
-    // Destroy
-    // Output
+    /// Destroy infrastructure managed by Terraform
+    #[structopt(
+        name = "destroy",
+        raw(setting = "structopt::clap::AppSettings::TrailingVarArg")
+    )]
+    Destroy {
+        #[structopt(required = true, help = "Configuration name")]
+        config: String,
+
+        #[structopt(
+            short = "d",
+            long = "dir",
+            default_value = ".",
+            help = "Path to directory with Terraform files"
+        )]
+        directory: String,
+
+        #[structopt(
+            short = "t",
+            long = "target",
+            help = "Path to the main Terraform module (*.tf)"
+        )]
+        target: Option<String>,
+
+        #[structopt(
+            long = "template",
+            default_value = "main.tpl",
+            help = "File name of the used template module (*.tpl)"
+        )]
+        template: String,
+
+        #[structopt(
+            short = "o",
+            long = "out",
+            help = "File name of the generated Terraform module (*.tf)"
+        )]
+        out: Option<String>,
+
+        #[structopt(
+            long = "--cleanup",
+            help = "Delete main.tf module after initialization."
+        )]
+        cleanup: bool,
+
+        #[structopt(hidden = true, help = "Extra options for Terraform destroy command")]
+        extra: Vec<String>,
+    },
     #[structopt(name = "list")]
     /// Show available configurations
     List {
