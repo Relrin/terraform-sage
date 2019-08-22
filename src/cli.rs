@@ -191,7 +191,11 @@ pub enum Command {
         #[structopt(hidden = true, help = "Extra options for Terraform destroy command")]
         extra: Vec<String>,
     },
-    /// Reads output variables from a Terraform state file and prints them.
+    /// Reads output variables from a Terraform state file and prints them
+    #[structopt(
+        name = "output",
+        raw(setting = "structopt::clap::AppSettings::TrailingVarArg")
+    )]
     Output {
         #[structopt(required = true, help = "Configuration name")]
         config: String,
