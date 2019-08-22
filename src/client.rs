@@ -62,6 +62,15 @@ impl SageClient {
                 cleanup,
                 extra,
             } => self.destroy_infrastructure(config, directory, target, template, out, *cleanup, extra),
+            Command::Output {
+                config,
+                directory,
+                target,
+                template,
+                out,
+                cleanup,
+                extra,
+            } => self.output_variables(config, directory, target, template, out, *cleanup, extra),
             Command::List { directory } => self.show_configurations(directory),
             Command::Generate {
                 directory,
@@ -219,6 +228,40 @@ impl SageClient {
         let main_filepath = self.get_main_tf(directory, config, target, template, &out_filename)?;
         let terraform_args = self.terraform.get_command_args(configs_path, directory, extra);
         self.terraform.call_with_input("destroy", &terraform_args)?;
+
+        if cleanup {
+            self.terraform.delete_main_tf(&main_filepath)?;
+        };
+        Ok(())
+    }
+
+    // Reads output variables from a Terraform state file and prints them.
+    //
+    // If `target` option contains path to *.tf module, then it will be
+    // returned to the caller.
+    //
+    // Otherwise, this method will use the specified name for output file in
+    // `out` parameter or generate a new file name, then extract the base
+    // template by path specified in `template` parameter, call a template
+    // renderer and save it by directory, specified in `directory` parameter.
+    fn output_variables(
+        &self,
+        config: &String,
+        directory: &String,
+        target: &Option<String>,
+        template: &String,
+        out: &Option<String>,
+        cleanup: bool,
+        extra: &Vec<String>,
+    ) -> Result<(), SageError> {
+        let configs = get_configs(directory)?;
+        is_correct_config(config, configs.clone())?;
+        let configs_copy = configs.clone();
+        let configs_path = configs_copy.get(config).unwrap();
+        let out_filename = Some(out.clone().unwrap_or(String::from("main.tf")));
+        let main_filepath = self.get_main_tf(directory, config, target, template, &out_filename)?;
+        let terraform_args = self.terraform.get_command_args(configs_path, directory, extra);
+        self.terraform.call_without_input("output", &terraform_args)?;
 
         if cleanup {
             self.terraform.delete_main_tf(&main_filepath)?;
