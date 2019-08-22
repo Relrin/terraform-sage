@@ -61,7 +61,7 @@ Terraform >= 0.11 (older not tested)
            ├ ...
            └ variables.tf
     ```
-    The `configs` directory is required and used for correct and smooth work of this wrapper. The `terraform-sage` will track environments defined in `configs` directory and will make according action depends on invoke Terraform commands.
+    The `configs` directory is required and used for correct and smooth work of this wrapper. The `terraform-sage` will track environments defined in `configs` directory and will make an according action depends on the invoked Terraform command.
     
     P.S. Also see the [project structure](#project-structure) section for more information about recommended project structure.
 
