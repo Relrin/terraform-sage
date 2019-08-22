@@ -48,6 +48,7 @@ mod tests {
     use crate::template::generate_from_template;
 
     #[test]
+    #[ignore]
     fn test_generate_from_template() {
         let handlebars = Handlebars::new();
         let config = String::from("dev");
