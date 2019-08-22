@@ -191,6 +191,49 @@ pub enum Command {
         #[structopt(hidden = true, help = "Extra options for Terraform destroy command")]
         extra: Vec<String>,
     },
+    /// Reads output variables from a Terraform state file and prints them.
+    Output {
+        #[structopt(required = true, help = "Configuration name")]
+        config: String,
+
+        #[structopt(
+            short = "d",
+            long = "dir",
+            default_value = ".",
+            help = "Path to directory with Terraform files"
+        )]
+        directory: String,
+
+        #[structopt(
+            short = "t",
+            long = "target",
+            help = "Path to the main Terraform module (*.tf)"
+        )]
+        target: Option<String>,
+
+        #[structopt(
+            long = "template",
+            default_value = "main.tpl",
+            help = "File name of the used template module (*.tpl)"
+        )]
+        template: String,
+
+        #[structopt(
+            short = "o",
+            long = "out",
+            help = "File name of the generated Terraform module (*.tf)"
+        )]
+        out: Option<String>,
+
+        #[structopt(
+            long = "--cleanup",
+            help = "Delete main.tf module after initialization."
+        )]
+        cleanup: bool,
+
+        #[structopt(hidden = true, help = "Extra options for Terraform destroy command")]
+        extra: Vec<String>,
+    },
     #[structopt(name = "list")]
     /// Show available configurations
     List {
