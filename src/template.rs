@@ -41,6 +41,7 @@ pub fn generate_from_template(
 #[cfg(test)]
 mod tests {
     use std::fs;
+    use std::env;
     use std::path::Path;
 
     use handlebars::Handlebars;
@@ -48,16 +49,16 @@ mod tests {
     use crate::template::generate_from_template;
 
     #[test]
-    #[ignore]
     fn test_generate_from_template() {
         let handlebars = Handlebars::new();
         let config = String::from("dev");
         let used_directory = Path::new("./examples/approach_two");
+        let out_directory = env::temp_dir();
         let path_to_target = used_directory
             .join("main.tpl")
             .to_string_lossy()
             .into_owned();
-        let path_to_out = used_directory
+        let path_to_out = out_directory
             .join("main.tf")
             .to_string_lossy()
             .into_owned();
@@ -72,11 +73,12 @@ mod tests {
         let handlebars = Handlebars::new();
         let config = String::from("dev");
         let used_directory = Path::new("./examples/INVALID_PATH");
+        let out_directory = env::temp_dir();
         let path_to_target = used_directory
             .join("main.tpl")
             .to_string_lossy()
             .into_owned();
-        let path_to_out = used_directory
+        let path_to_out = out_directory
             .join("main.tf")
             .to_string_lossy()
             .into_owned();
@@ -90,11 +92,12 @@ mod tests {
         let handlebars = Handlebars::new();
         let config = String::from("dev");
         let used_directory = Path::new("./examples/examples");
+        let out_directory = env::temp_dir();
         let path_to_target = used_directory
             .join("INVALID_FILE_NAME")
             .to_string_lossy()
             .into_owned();
-        let path_to_out = used_directory
+        let path_to_out = out_directory
             .join("main.tf")
             .to_string_lossy()
             .into_owned();
