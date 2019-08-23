@@ -4,7 +4,7 @@ set -ex
 
 main() {
     local src=$(pwd) \
-          artefact = terraform-sage.exe
+          artefact=terraform-sage \
           stage= \
 
     case $TRAVIS_OS_NAME in
@@ -16,20 +16,9 @@ main() {
             ;;
     esac
 
-    case $TARGET in
-        x86_64-pc-windows-gnu)
-            artefact=terraform-sage.exe
-            ;;
-        x86_64-unknown-linux-gnu)    
-            artefact=terraform-sage
-            ;;
-        x86_64-unknown-linux-musl)
-            artefact=terraform-sage
-            ;;
-        x86_64-apple-darwin)
-            artefact=terraform-sage
-            ;;
-    esac
+    if [ $TARGET = x86_64-pc-windows-gnu ]; then
+        artefact=terraform-sage.exe
+    fi
 
     test -f Cargo.lock || cargo generate-lockfile
 
