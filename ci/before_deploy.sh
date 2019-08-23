@@ -22,7 +22,7 @@ main() {
 
     test -f Cargo.lock || cargo generate-lockfile
 
-    cross rustc --bin $artefact --target $TARGET --release -- -C lto
+    cross rustc --bin terraform-sage --target $TARGET --release -- -C lto
     cp target/$TARGET/release/$artefact $stage/
 
     cd $stage
