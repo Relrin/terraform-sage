@@ -3,6 +3,11 @@ name = "terraform-sage"
 version = "0.1.0"
 authors = ["Valeryi Savich <relrin78@gmail.com>"]
 edition = "2018"
+license = "BSD"
+description = "Cross-platform tool for easier Terraform deployments"
+homepage = "https://github.com/Relrin/terraform-sage"
+repository = "https://github.com/Relrin/terraform-sage"
+keywords = ["terraform", "cli", "deploy", "devops", "infrastructure"]
 
 [dependencies]
 ansi_term = "0.12"
