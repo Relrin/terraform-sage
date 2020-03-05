@@ -252,11 +252,10 @@ impl SageClient {
     ) -> Result<(), SageError> {
         let configs = get_configs(directory)?;
         is_correct_config(config, configs.clone())?;
-        let configs_copy = configs.clone();
-        let configs_path = configs_copy.get(config).unwrap();
         let out_filename = Some(out.clone().unwrap_or(String::from("main.tf")));
         let main_filepath = self.get_main_tf(directory, config, target, template, &out_filename)?;
-        let terraform_args = self.terraform.get_command_args(configs_path, directory, extra);
+        let mut terraform_args = Vec::new();
+        terraform_args.extend(extra.iter().cloned());
         self.terraform.call_without_input("output", &terraform_args)?;
 
         if cleanup {
