@@ -7,8 +7,6 @@ use crate::terminal::{print_command_done, print_error, print_info, print_warning
 use crate::terraform::TerraformClient;
 use crate::utils::{get_configs, is_correct_config};
 
-use handlebars::Handlebars;
-
 pub struct SageClient {
     terraform: TerraformClient,
 }
@@ -325,12 +323,11 @@ impl SageClient {
         template: &String,
         out: &String,
     ) -> Result<String, SageError> {
-        let handlebars = Handlebars::new();
         let configs = get_configs(directory)?;
         is_correct_config(config, configs)?;
         let used_directory = Path::new(directory);
         let path_to_target = used_directory.join(template).to_string_lossy().into_owned();
         let path_to_out = used_directory.join(out).to_string_lossy().into_owned();
-        generate_from_template(&handlebars, config, &path_to_target, &path_to_out)
+        generate_from_template(directory, config, &path_to_target, &path_to_out)
     }
 }
