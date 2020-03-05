@@ -1,5 +1,5 @@
 provider "aws" {
-  profile = {{profile}}
+  profile = "{{profile}}"
   region  = "us-east-1"
 }
 
@@ -14,7 +14,7 @@ resource "aws_s3_bucket" "bucket" {
   acl    = "private"
 
   tags = {
-    "Name": {{aws_bucket_name}}
+    "Name": "{{aws_bucket_name}}"
     "EnvironmentType" = "${var.environment}"
   }
 }
