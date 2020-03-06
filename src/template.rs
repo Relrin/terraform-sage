@@ -102,15 +102,13 @@ mod tests {
     use std::env;
     use std::path::Path;
 
-    use handlebars::Handlebars;
-
     use crate::template::generate_from_template;
 
     #[test]
     fn test_generate_from_template() {
-        let handlebars = Handlebars::new();
+        let directory = "./examples/approach_two".to_string();
         let config = String::from("dev");
-        let used_directory = Path::new("./examples/approach_two");
+        let used_directory = Path::new(directory.as_str());
         let out_directory = env::temp_dir();
         let path_to_target = used_directory
             .join("main.tpl")
@@ -120,7 +118,7 @@ mod tests {
             .join("main.tf")
             .to_string_lossy()
             .into_owned();
-        let result = generate_from_template(&handlebars, &config, &path_to_target, &path_to_out);
+        let result = generate_from_template(&directory, &config, &path_to_target, &path_to_out);
 
         assert_eq!(result.is_ok(), true);
         fs::remove_file(path_to_out).unwrap();
@@ -128,9 +126,9 @@ mod tests {
 
     #[test]
     fn test_generate_from_template_returns_error_for_invalid_path() {
-        let handlebars = Handlebars::new();
+        let directory = "./examples/INVALID_PATH".to_string();
         let config = String::from("dev");
-        let used_directory = Path::new("./examples/INVALID_PATH");
+        let used_directory = Path::new(directory.as_str());
         let out_directory = env::temp_dir();
         let path_to_target = used_directory
             .join("main.tpl")
@@ -140,16 +138,16 @@ mod tests {
             .join("main.tf")
             .to_string_lossy()
             .into_owned();
-        let result = generate_from_template(&handlebars, &config, &path_to_target, &path_to_out);
+        let result = generate_from_template(&directory, &config, &path_to_target, &path_to_out);
 
         assert_eq!(result.is_err(), true);
     }
 
     #[test]
     fn test_generate_from_template_returns_error_for_invalid_target_file_name() {
-        let handlebars = Handlebars::new();
+        let directory = "./example/examples".to_string();
         let config = String::from("dev");
-        let used_directory = Path::new("./examples/examples");
+        let used_directory = Path::new(directory.as_str());
         let out_directory = env::temp_dir();
         let path_to_target = used_directory
             .join("INVALID_FILE_NAME")
@@ -159,7 +157,7 @@ mod tests {
             .join("main.tf")
             .to_string_lossy()
             .into_owned();
-        let result = generate_from_template(&handlebars, &config, &path_to_target, &path_to_out);
+        let result = generate_from_template(&directory, &config, &path_to_target, &path_to_out);
 
         assert_eq!(result.is_err(), true);
     }
