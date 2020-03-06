@@ -4,6 +4,7 @@ Cross-platform tool for easier Terraform deployments
 
  - [Quick start](#quick-start)
  - [FAQ](#faq)
+ - [Advanced usage](#advanced-usage)
  - [Project structure](#project-structure)
  - [Development](#development)
  - [License](#license)
@@ -101,6 +102,57 @@ Terraform >= 0.11 (older not tested)
 ```
 terraform apply dev --dir=examples/approach_two . -var-file=my-variables.tf
 ```
+
+## Advanced usage
+Terraform-sage tool also provides a way to define additional context for each used environment. For this you will need to create a new file with the `context.toml` name in the root configs folder. As the result we will have the following proejct structure:
+```
+terraform
+├ configs
+│  ├ dev
+│  │  ├ secrets.tf
+│  │  └ variables.tf
+│  ├ staging
+│  │  ├ secrets.tf
+│  │  └ variables.tf
+│  └ production
+│  │  ├ secrets.tf
+│  │  └ variables.tf
+│  └  context.toml
+└ main.tpl
+```
+
+The `context.toml` file contains placeholders for the template engine which is using during the generation of the `main.tf` file. Each section has the same name as the folder with variables for your environment. Under each section you need to specify key-pair values that supposed to be used in the appropriate context.
+
+An example the definitions:
+```
+[dev]
+bucket_name = "dev"
+profile = "aws-dev-account"
+
+[product]
+bucket_name = "prod"
+profile = "aws-prod-account"
+```
+After it, you will need to declare placeholders in the appropriate places in the `main.tpl`, like this:
+```
+provider "aws" {
+  profile = "{{profile}}"
+  region  = "us-east-1"
+}
+
+# ...
+
+resource "aws_s3_bucket" "bucket" {
+  bucket = "terraform-sage-bucket"
+  acl    = "private"
+
+  tags = {
+    "Name": "{{bucket_name}}"
+    "EnvironmentType" = "${var.environment}"
+  }
+}
+```
+And then you're ready to go! Just call the `terraform-sage apply dev` commands (or any other suitable to you) without any further changes.
 
 ## Project structure
 
