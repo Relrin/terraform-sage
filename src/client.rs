@@ -7,18 +7,14 @@ use crate::terminal::{print_command_done, print_error, print_info, print_warning
 use crate::terraform::TerraformClient;
 use crate::utils::{get_configs, is_correct_config};
 
-use handlebars::Handlebars;
-
 pub struct SageClient {
-    handlebars: Handlebars,
     terraform: TerraformClient,
 }
 
 impl SageClient {
     // Initialize a new instance of Sage client.
-    pub fn new() -> SageClient {
+    pub fn new() -> Self {
         SageClient {
-            handlebars: Handlebars::new(),
             terraform: TerraformClient::new(),
         }
     }
@@ -256,11 +252,10 @@ impl SageClient {
     ) -> Result<(), SageError> {
         let configs = get_configs(directory)?;
         is_correct_config(config, configs.clone())?;
-        let configs_copy = configs.clone();
-        let configs_path = configs_copy.get(config).unwrap();
         let out_filename = Some(out.clone().unwrap_or(String::from("main.tf")));
         let main_filepath = self.get_main_tf(directory, config, target, template, &out_filename)?;
-        let terraform_args = self.terraform.get_command_args(configs_path, directory, extra);
+        let mut terraform_args = Vec::new();
+        terraform_args.extend(extra.iter().cloned());
         self.terraform.call_without_input("output", &terraform_args)?;
 
         if cleanup {
@@ -332,6 +327,6 @@ impl SageClient {
         let used_directory = Path::new(directory);
         let path_to_target = used_directory.join(template).to_string_lossy().into_owned();
         let path_to_out = used_directory.join(out).to_string_lossy().into_owned();
-        generate_from_template(&self.handlebars, config, &path_to_target, &path_to_out)
+        generate_from_template(directory, config, &path_to_target, &path_to_out)
     }
 }

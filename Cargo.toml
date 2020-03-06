@@ -10,10 +10,11 @@ repository = "https://github.com/Relrin/terraform-sage"
 keywords = ["terraform", "cli", "deploy", "devops", "infrastructure"]
 
 [dependencies]
-ansi_term = "0.12"
-clap = "2.31"
-handlebars = "2.0.1"
-serde_json = "1.0"
-structopt = "0.2.18"
-structopt-derive = "0.2.18"
-quick-error = "1.2.2"
+ansi_term = "0.12.1"
+clap = "2.33"
+handlebars = "3.0.1"
+serde_json = "1.0.48"
+structopt = "0.3.11"
+structopt-derive = "0.4.4"
+toml = "0.5.6"
+quick-error = "1.2.3"

@@ -1,0 +1,11 @@
+[dev]
+profile = "dev-profile"
+aws_bucket_name = "dev-bucket"
+
+[production]
+profile = "production-profile"
+aws_bucket_name = "production-data"
+
+[staging]
+profile = "staging-profile"
+aws_bucket_name = "ci-bucket"

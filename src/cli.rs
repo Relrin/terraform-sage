@@ -6,7 +6,7 @@ pub enum Command {
     /// Initialize a Terraform working configuration
     #[structopt(
         name = "init",
-        raw(setting = "structopt::clap::AppSettings::TrailingVarArg")
+        setting = structopt::clap::AppSettings::TrailingVarArg
     )]
     Init {
         #[structopt(required = true, help = "Configuration name")]
@@ -53,7 +53,7 @@ pub enum Command {
     /// Generate an execution plan for Terraform
     #[structopt(
         name = "plan",
-        raw(setting = "structopt::clap::AppSettings::TrailingVarArg")
+        setting = structopt::clap::AppSettings::TrailingVarArg
     )]
     Plan {
         #[structopt(required = true, help = "Configuration name")]
@@ -100,7 +100,7 @@ pub enum Command {
     /// Create or update infrastructure in according to Terraform configuration
     #[structopt(
         name = "apply",
-        raw(setting = "structopt::clap::AppSettings::TrailingVarArg")
+        setting = structopt::clap::AppSettings::TrailingVarArg
     )]
     Apply {
         #[structopt(required = true, help = "Configuration name")]
@@ -147,7 +147,7 @@ pub enum Command {
     /// Destroy infrastructure managed by Terraform
     #[structopt(
         name = "destroy",
-        raw(setting = "structopt::clap::AppSettings::TrailingVarArg")
+        setting = structopt::clap::AppSettings::TrailingVarArg
     )]
     Destroy {
         #[structopt(required = true, help = "Configuration name")]
@@ -194,7 +194,7 @@ pub enum Command {
     /// Reads output variables from a Terraform state file and prints them
     #[structopt(
         name = "output",
-        raw(setting = "structopt::clap::AppSettings::TrailingVarArg")
+        setting = structopt::clap::AppSettings::TrailingVarArg
     )]
     Output {
         #[structopt(required = true, help = "Configuration name")]
