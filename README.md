@@ -104,7 +104,7 @@ terraform apply dev --dir=examples/approach_two . -var-file=my-variables.tf
 ```
 
 ## Advanced usage
-Terraform-sage tool also provides a way to define additional context for each used environment. For this you will need to create a new file with the `context.toml` name in the root configs folder. As the result we will have the following proejct structure:
+Terraform-sage tool also provides a way to define additional context for each used environment. For this you will need to create a new file with the `context.toml` name in the root configs folder. As the result we will have the following project structure:
 ```
 terraform
 ├ configs
