@@ -11,7 +11,7 @@ Cross-platform tool for easier Terraform deployments
 
 ## Features
 
-- Template-based approach for working in multiple environments
+- Template-based approach for work in multiple environments
 - Semi-automated deploys via command-line interface (as Terraform does)
 
 ## Requirements
@@ -66,7 +66,7 @@ Terraform >= 0.11 (older not tested)
     
     P.S. Also see the [project structure](#project-structure) section for more information about recommended project structure.
 
-6. Create the base template (I recommend to name it as `main.tpl`), that stores main definition of your resources and a backend storage for Terraform state. For making the writing base template easier, I recommend you to start with from `main.tf` module where you will describe everything what you need and then rename it to `main.tpl`. After when all resources / modules are described you will need to specify one of available [backend storages](https://www.terraform.io/docs/backends/types/index.html) for Terraform states, and then append `{{CONFIG_NAME}}` string to the key (which is basically is the file name for Terraform state), like this:
+6. Create the base template (I recommend to name it as the `main.tpl`), that stores main definition of your resources and a backend storage for Terraform state. For making the writing base template easier, I recommend you to start with from `main.tf` module where you will describe everything what you need and then rename it to `main.tpl`. After when all resources / modules are described you will need to specify one of available [backend storages](https://www.terraform.io/docs/backends/types/index.html) for Terraform states, and then append `{{CONFIG_NAME}}` string to the key (which is basically is the file name for Terraform state), like this:
     ```
     terraform {
       backend "s3" {
@@ -97,7 +97,7 @@ Terraform >= 0.11 (older not tested)
 **Q**: Why this tool / wrapper was written?  
 **A**: Being a quite lazy developer, I tired of writing long Terraform command calls with specifying used `*.tf` / `*.tfvars` modules when you need to create or update something on any existing environment. The mess with modules increases when developers are using different operation systems and "additional" scripts for simplifying their Terraform workflows.
 
-**Q**: How can I pass extra arguments for Terraform command (i.e. `terraform-sage apply`)?  
+**Q**: How can I pass extra arguments for Terraform command (e.g. `terraform-sage apply`)?  
 **A**: For this case you will need to append `.` in the end, and then specify a list of arguments as you were working with actual Terraform CLI, like this:
 ```
 terraform apply dev --dir=examples/approach_two . -var-file=my-variables.tf
@@ -152,11 +152,11 @@ resource "aws_s3_bucket" "bucket" {
   }
 }
 ```
-And then you're ready to go! Just call the `terraform-sage apply dev` commands (or any other suitable to you) without any further changes.
+And then you're ready to go! Just call the `terraform-sage apply dev` command (or any other suitable to you) without any further changes.
 
 ## Project structure
 
-The `terraform-sage` application relies on the certain project structure for correct work. Therefore, I recommend to developers two ways to organize their own projects:
+The `terraform-sage` application relies on the certain project structure for a correct work. Therefore, I recommend to developers two ways of organizing their own projects:
 - Approach #1:
 
   ```
@@ -185,7 +185,7 @@ The `terraform-sage` application relies on the certain project structure for cor
 
   Pros:
 
-  - Dependant resources are split into [Terraform modules](https://www.terraform.io/docs/configuration/modules.html), therefore it is easier to re-use in other projects.
+  - Dependant resources are splitted into [Terraform modules](https://www.terraform.io/docs/configuration/modules.html), therefore it is easier to re-use in other projects.
   - Easier to manage projects which have a lot of dependencies.
   - `main.tpl` file is relatively small and contains only a minimum amount of code
 
@@ -212,7 +212,7 @@ The `terraform-sage` application relies on the certain project structure for cor
 
   Pros:
 
-  - Good choice for small projects with a couple of resources
+  - A good choice for small projects with a couple of resources
   - Easy to pass arguments to dependant resources
 
   Cons:
@@ -226,7 +226,7 @@ To start developing you will need:
 - [Docker](https://docs.docker.com/install/)
 - [Docker-compose](https://docs.docker.com/compose/install/)
 
-Before attaching to the node, you will need to build the local dev image and start it in detached mode. Run the following command from the project root folder:
+Before attaching to the node, you will need to build up the local dev image and start it in the detached mode. Run the following command from the project root folder:
 
 ```
 docker-compose -f docker-compose.dev.yml up -d
